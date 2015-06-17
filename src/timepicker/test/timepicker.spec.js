@@ -1005,5 +1005,29 @@ describe('timepicker directive', function () {
     });
   });
 
+  describe('use with `ng-blur` directive', function() {
+    beforeEach(inject(function() {
+      $rootScope.changeHandler = jasmine.createSpy('changeHandler');
+      $rootScope.time = new Date();
+      element = $compile('<timepicker ng-model="time" ng-blur="changeHandler()"></timepicker>')($rootScope);
+      $rootScope.$digest();
+    }));
+
+    it('should not be called initially', function() {
+      expect($rootScope.changeHandler).not.toHaveBeenCalled();
+    });
+
+    it('should be called when hours / minutes buttons are unfocused', function() {
+      var btn1 = getHoursButton(true);
+      var btn2 = getMinutesButton(false);
+
+      doClick(btn1, 1);
+      doClick(btn2, 1);
+      doClick(btn1, 1);
+      $rootScope.$digest();
+      expect($rootScope.changeHandler.calls.count()).toBe(2);
+    });
+  });
+
 });
 

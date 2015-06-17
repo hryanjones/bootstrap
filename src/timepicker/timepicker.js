@@ -16,7 +16,7 @@ angular.module('ui.bootstrap.timepicker', [])
       ngModelCtrl = { $setViewValue: angular.noop }, // nullModelCtrl
       meridians = angular.isDefined($attrs.meridians) ? $scope.$parent.$eval($attrs.meridians) : timepickerConfig.meridians || $locale.DATETIME_FORMATS.AMPMS;
 
-  this.init = function( ngModelCtrl_, inputs ) {
+  this.init = function( ngModelCtrl_, inputs, parentEl ) {
     ngModelCtrl = ngModelCtrl_;
     ngModelCtrl.$render = this.render;
 
@@ -38,7 +38,7 @@ angular.module('ui.bootstrap.timepicker', [])
     }
 
     $scope.readonlyInput = angular.isDefined($attrs.readonlyInput) ? $scope.$parent.$eval($attrs.readonlyInput) : timepickerConfig.readonlyInput;
-    this.setupInputEvents( hoursInputEl, minutesInputEl );
+    this.setupInputEvents( hoursInputEl, minutesInputEl, parentEl );
   };
 
   var hourStep = timepickerConfig.hourStep;
@@ -154,7 +154,7 @@ angular.module('ui.bootstrap.timepicker', [])
     });
   };
 
-  this.setupInputEvents = function( hoursInputEl, minutesInputEl ) {
+  this.setupInputEvents = function( hoursInputEl, minutesInputEl, parentEl ) {
     if ( $scope.readonlyInput ) {
       $scope.updateHours = angular.noop;
       $scope.updateMinutes = angular.noop;
@@ -189,6 +189,7 @@ angular.module('ui.bootstrap.timepicker', [])
           $scope.hours = pad( $scope.hours );
         });
       }
+      parentEl.triggerEvent('blur', e);
     });
 
     $scope.updateMinutes = function() {
@@ -208,6 +209,7 @@ angular.module('ui.bootstrap.timepicker', [])
           $scope.minutes = pad( $scope.minutes );
         });
       }
+      parentEl.triggerEvent('blur', e);
     });
 
   };
@@ -259,10 +261,10 @@ angular.module('ui.bootstrap.timepicker', [])
     selected.setHours( dt.getHours(), dt.getMinutes() );
     refresh();
   }
-  
+
   $scope.showSpinners = angular.isDefined($attrs.showSpinners) ?
     $scope.$parent.$eval($attrs.showSpinners) : timepickerConfig.showSpinners;
-  
+
   $scope.incrementHours = function() {
     addMinutes( hourStep * 60 );
   };
@@ -292,7 +294,7 @@ angular.module('ui.bootstrap.timepicker', [])
       var timepickerCtrl = ctrls[0], ngModelCtrl = ctrls[1];
 
       if ( ngModelCtrl ) {
-        timepickerCtrl.init( ngModelCtrl, element.find('input') );
+        timepickerCtrl.init( ngModelCtrl, element.find('input'), element );
       }
     }
   };
