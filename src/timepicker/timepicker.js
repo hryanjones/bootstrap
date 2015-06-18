@@ -189,7 +189,7 @@ angular.module('ui.bootstrap.timepicker', [])
           $scope.hours = pad( $scope.hours );
         });
       }
-      parentEl.triggerEvent('blur', e);
+      parentEl.triggerHandler('blur', e);
     });
 
     $scope.updateMinutes = function() {
@@ -209,7 +209,7 @@ angular.module('ui.bootstrap.timepicker', [])
           $scope.minutes = pad( $scope.minutes );
         });
       }
-      parentEl.triggerEvent('blur', e);
+      parentEl.triggerHandler('blur', e);
     });
 
   };
